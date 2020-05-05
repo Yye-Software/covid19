@@ -30,17 +30,6 @@ const App = () => {
   const [selectedState, setSelectedState] = useState<string>("");
   const [selectedDataPoints, setSelectedDataPoints] = useState<ICaseDiff[]>([]);
 
-  // const sameDay = (a: ICasePoint, b: ICasePoint): boolean => {
-  //   const dateA = a.caseDate.toDateString();
-  //   const dateB = b.caseDate.toDateString();
-
-  //   if (dateA === dateB && a.state === b.state) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
-
   useEffect(() => {
     // on startup, grab the data
     const getData = async () => {
