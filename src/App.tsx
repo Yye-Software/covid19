@@ -63,34 +63,34 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    const updateData = () => {
+      const dataSorted = dataPoints.filter(x => x.state === selectedState).sort((a, b) => a.caseDate.getTime() - b.caseDate.getTime());
+      const sma: number = 7;
+
+      let caseDiffs: ICaseDiff[] = dataSorted.map((x, i) => {
+        if (i === 0) {
+          return { ...x, caseDiff: x.case }
+        } else {
+          return { ...x, caseDiff: x.case - dataSorted[i - 1].case }
+        }
+      });
+
+      // now that the diffs are calculated, lets do our moving average
+      caseDiffs = caseDiffs.map((c, i) => {
+        if (i < sma) {
+          return { ...c }
+        } else {
+          return { ...c, movingAverage: getCaseDiffSMA(caseDiffs, i, sma) }
+        }
+      });
+
+      console.log(caseDiffs);
+
+      setSelectedDataPoints(caseDiffs);
+    }
+
     updateData();
-  }, [selectedState]);
-
-  const updateData = () => {
-    const dataSorted = dataPoints.filter(x => x.state === selectedState).sort((a, b) => a.caseDate.getTime() - b.caseDate.getTime());
-    const sma: number = 7;
-
-    let caseDiffs: ICaseDiff[] = dataSorted.map((x, i) => {
-      if (i === 0) {
-        return { ...x, caseDiff: x.case }
-      } else {
-        return { ...x, caseDiff: x.case - dataSorted[i - 1].case }
-      }
-    });
-
-    // now that the diffs are calculated, lets do our moving average
-    caseDiffs = caseDiffs.map((c, i) => {
-      if (i < sma) {
-        return { ...c }
-      } else {
-        return { ...c, movingAverage: getCaseDiffSMA(caseDiffs, i, sma) }
-      }
-    });
-
-    console.log(caseDiffs);
-
-    setSelectedDataPoints(caseDiffs);
-  }
+  }, [selectedState, dataPoints]);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedState(event.currentTarget.value);
