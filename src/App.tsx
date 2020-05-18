@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { CircularProgress, Container } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react';
+import './App.css';
 import CoronaChart from './Components/CoronaChart';
-import { ICasePoint } from './Types/ICasePoint';
-import { Container, CircularProgress } from '@material-ui/core';
-import { ICaseDiff } from './Types/ICaseDiff';
 import { StatsComponent } from './Components/Stats';
+import { ICaseDiff } from './Types/ICaseDiff';
+import { ICasePoint } from './Types/ICasePoint';
+import { getCaseDiffSMA } from './Utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,12 +66,6 @@ const App = () => {
     updateData();
   }, [selectedState]);
 
-  const getSMA = (cases: ICaseDiff[], curr: number, ma: number): number => {
-    const start: number = curr - ma;
-    const sum: number = cases.slice(start, curr).map(c => c.caseDiff).reduce((x, curr) => x + curr);
-    return sum / ma;
-  }
-
   const updateData = () => {
     const dataSorted = dataPoints.filter(x => x.state === selectedState).sort((a, b) => a.caseDate.getTime() - b.caseDate.getTime());
     const sma: number = 7;
@@ -88,7 +83,7 @@ const App = () => {
       if (i < sma) {
         return { ...c }
       } else {
-        return { ...c, movingAverage: getSMA(caseDiffs, i, sma) }
+        return { ...c, movingAverage: getCaseDiffSMA(caseDiffs, i, sma) }
       }
     });
 
