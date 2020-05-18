@@ -31,9 +31,9 @@ jobs:
       - name: Yarn Install
         run: |
           yarn install
-      - name: Build
-          run: |
-            yarn build
+      - name: Production Build
+        run: |
+          yarn build
       - name: Unit Tests
         run: |
           yarn prod
