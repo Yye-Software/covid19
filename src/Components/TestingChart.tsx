@@ -3,11 +3,11 @@ import { Line } from 'react-chartjs-2';
 import { ICaseDiff } from '../Types/ICaseDiff';
 
 
-interface CoronaChartProps {
+interface TestingChartProps {
   dataPoints: ICaseDiff[]
 }
 
-const CoronaChart: React.FC<CoronaChartProps> = ({ dataPoints }) => {
+const TestingChart: React.FC<TestingChartProps> = ({ dataPoints }) => {
   return (
     <>
       <Line
@@ -26,15 +26,21 @@ const CoronaChart: React.FC<CoronaChartProps> = ({ dataPoints }) => {
           labels: dataPoints.map(d => d.caseDate),
           datasets: [
             {
-              data: dataPoints.map(x => x.caseDiff),
-              label: "New Cases",
+              data: dataPoints.map(x => x.newTests),
+              label: "New Tests",
               borderColor: "#3333ff",
               fill: true,
             },
             {
-              data: dataPoints.map(x => x.movingAverage),
-              label: "7 day avg.",
+              data: dataPoints.map(x => x.positiveTests),
+              label: "Positive Tests",
               borderColor: "#aa2138",
+              fill: true
+            },
+            {
+              data: dataPoints.map(x => x.negativeTests),
+              label: "Negative Tests",
+              borderColor: "#00ff1a",
               fill: true
             },
           ]
@@ -42,4 +48,4 @@ const CoronaChart: React.FC<CoronaChartProps> = ({ dataPoints }) => {
     </>)
 }
 
-export default CoronaChart;
+export default TestingChart;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { ICaseDiff } from '../Types/ICaseDiff';
 import StatCard from './StatCard';
 
@@ -21,9 +21,10 @@ export const StatsComponent: React.FC<StatsComponentProps> = (props) => {
 
   return (
     <>
-      <StatCard title="Most Recent" data={`${currentDetails?.caseDate.toDateString()}, ${currentDetails?.caseDiff} cases`} />
-      <StatCard title="7 Day Avg" data={`${currentDetails?.movingAverage} cases`} />
-      <StatCard title="Worst Day" data={`${worstDay?.caseDate.toDateString()}, ${worstDay?.caseDiff} cases`} />
+      <StatCard title="Most Recent" data={`${currentDetails?.caseDate.toDateString()}, ${currentDetails?.caseDiff.toLocaleString()} cases`} />
+      <StatCard title="7 Day Avg" data={`${currentDetails?.movingAverage?.toFixed(2)} cases`} />
+      <StatCard title="Total Cases" data={`${currentDetails?.case.toLocaleString()} cases`} />
+      <StatCard title="Worst Day" data={`${worstDay?.caseDate.toDateString()}, ${worstDay?.caseDiff.toLocaleString()} cases`} />
     </>)
 }
 
