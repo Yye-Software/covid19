@@ -9,6 +9,7 @@ import { StatsComponent } from './Components/Stats';
 import { TabPanel } from './Components/TabPanel';
 import TestingChart from './Components/TestingChart';
 import TestingStats from './Components/TestingStats';
+import TestToCaseChart from './Components/TestToCaseChart';
 import { ICaseDiff } from './Types/ICaseDiff';
 import { ICasePoint } from './Types/ICasePoint';
 import { getCaseDiffSMA } from './Utils';
@@ -43,7 +44,7 @@ const App = () => {
     const getData = async () => {
       try {
         setLoading(true);
-        const req = await fetch('https://covidtracking.com/api/states/daily');
+        const req = await fetch('https://api.covidtracking.com/v1/states/daily.json');
         const data = await req.json();
         const result: ICasePoint[] = data.map((d: any) => {
           return {
@@ -83,9 +84,9 @@ const App = () => {
 
       let caseDiffs: ICaseDiff[] = dataSorted.map((x, i) => {
         if (i === 0) {
-          return { ...x, caseDiff: x.case }
+          return { ...x, caseDiff: x.case, testToCaseRatio: x.newTests / x.case }
         } else {
-          return { ...x, caseDiff: x.case - dataSorted[i - 1].case }
+          return { ...x, caseDiff: x.case - dataSorted[i - 1].case, testToCaseRatio: x.newTests / x.case - dataSorted[i - 1].case }
         }
       });
 
@@ -134,6 +135,7 @@ const App = () => {
             <Tabs value={selectedTab} onChange={handleTabChange}>
               <Tab label="Cases" />
               <Tab label="Tests" />
+              <Tab label="Case to Test" />
             </Tabs>
             <TabPanel value={selectedTab} index={0}>
               <CoronaChart dataPoints={selectedDataPoints} />
@@ -142,6 +144,9 @@ const App = () => {
             <TabPanel value={selectedTab} index={1}>
               <TestingChart dataPoints={selectedDataPoints} />
               <TestingStats dataPoints={selectedDataPoints} />
+            </TabPanel>
+            <TabPanel value={selectedTab} index={2}>
+              <TestToCaseChart dataPoints={selectedDataPoints} />
             </TabPanel>
           </Paper>
         </> : <CircularProgress />}
